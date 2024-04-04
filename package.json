@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.3",
+    "firebase-admin": "^12.0.0",
+    "google-auth-library": "^9.7.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.1.0",
+    "nodemailer": "^6.9.12",
+    "pg": "^8.11.3",
+    "redis": "^4.6.13",
+    "sequelize": "^6.37.1"
+  },
+  "devDependencies": {
+    "elapsed-time-logger": "^1.1.7",
+    "sequelize-cli": "^6.6.2"
+  },
+  "name": "tj-server-auth",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:migrate": "npx sequelize db:migrate",
+    "db:drop": "npx sequelize db:drop",
+    "db:seed": "npx sequelize db:seed:all"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "pass1234",
+    "database": "tije_apps",
+    "host": "172.22.22.42",
+    "dialect": "postgres",
+    "logging": false
+  },
+  "test": {
+    "username": "root",
+    "password": "password",
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "root",
+    "password": "password",
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
