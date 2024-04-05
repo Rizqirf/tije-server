@@ -69,6 +69,9 @@ module.exports = (sequelize, DataTypes) => {
       token_expiration: {
         type: DataTypes.DATE,
       },
+      deletedAt: {
+        type: DataTypes.DATE,
+      },
     },
 
     {

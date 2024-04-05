@@ -2,10 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
-const auth = require("./routes/auth");
 const errorHandler = require("./middleware/errorHandler");
-const { configureGoogleAuth } = require("./helpers/googleAuth");
 const user = require("./models/user");
+const routes = require("./routes");
 
 const port = process.env.PORT || 3000;
 
@@ -23,9 +22,7 @@ app.get("/ping", (req, res) => {
   res.send("pong");
 });
 
-app.use("/auth", auth);
-app.use("/user", user);
-
+app.use("/", routes);
 app.use(errorHandler);
 
 app.listen(port, () => {
