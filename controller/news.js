@@ -2,7 +2,7 @@ const { News } = require("../models");
 
 const getAllNews = async (req, res, next) => {
   try {
-    const news = await News.findAll();
+    const news = await News.findAll({ where: { deletedAt: null } });
     res.status(200).json(news);
   } catch (error) {
     next(error);
@@ -12,7 +12,7 @@ const getAllNews = async (req, res, next) => {
 const getNewsById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const news = await News.findByPk(id);
+    const news = await News.findOne({ where: { id, deletedAt: null } });
     if (!news) {
       throw { name: "NOT_FOUND" };
     }
@@ -51,7 +51,7 @@ const updateNews = async (req, res, next) => {
     await validateHighlight(is_highlight, is_active);
 
     const { id: userId } = req.user;
-    const news = await News.findByPk(id);
+    const news = await News.findOne({ where: { id, deletedAt: null } });
     if (!news) {
       throw { name: "NOT_FOUND" };
     }
@@ -75,10 +75,12 @@ const deleteNews = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { id: userId } = req.user;
-    const news = await News.findByPk(id);
+    const news = await News.findOne({ where: { id, deletedAt: null } });
     if (!news) {
       throw { name: "NOT_FOUND" };
     }
+
+    console.log(news);
 
     await news.update({
       deletedAt: new Date(),

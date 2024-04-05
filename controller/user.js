@@ -12,7 +12,7 @@ const getAllUsers = async (req, res, next) => {
 const getUserById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const user = await User.findByPk(id);
+    const user = await User.findOne({ id, deletedAt: null });
     if (!user) {
       throw { name: "NOT_FOUND" };
     }
@@ -25,7 +25,7 @@ const getUserById = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const user = await User.findByPk(id);
+    const user = await User.findOne({ id, deletedAt: null });
     if (!user) {
       throw { name: "NOT_FOUND" };
     }
@@ -49,7 +49,7 @@ const updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { name, email, phone } = req.body;
-    const user = await User.findByPk(id);
+    const user = await User.findOne({ id, deletedAt: null });
     if (!user) {
       throw { name: "NOT_FOUND" };
     }
