@@ -1,8 +1,17 @@
+const { setCache, getCache, deleteCache } = require("../helpers/redis");
 const { News } = require("../models");
 
 const getAllNews = async (req, res, next) => {
   try {
-    const news = await News.findAll({ where: { deletedAt: null } });
+    let news = await getCache("news");
+    if (news) {
+      res.status(200).json(JSON.parse(news));
+      return;
+    }
+
+    news = await News.findAll({ where: { deletedAt: null } });
+    await setCache("news", JSON.stringify(news));
+
     res.status(200).json(news);
   } catch (error) {
     next(error);
@@ -12,10 +21,18 @@ const getAllNews = async (req, res, next) => {
 const getNewsById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const news = await News.findOne({ where: { id, deletedAt: null } });
+
+    let news = await getCache(`news/${id}`);
+    if (news) {
+      res.status(200).json(JSON.parse(news));
+      return;
+    }
+
+    news = await News.findOne({ where: { id, deletedAt: null } });
     if (!news) {
       throw { name: "NOT_FOUND" };
     }
+    await setCache(`news/${id}`, JSON.stringify(news));
     res.status(200).json(news);
   } catch (error) {
     next(error);
@@ -37,6 +54,12 @@ const createNews = async (req, res, next) => {
       is_highlight,
       last_updated_by: id,
     });
+
+    if (!!is_active) {
+      await setCache(`news/${news.id}`, JSON.stringify(news));
+    }
+    await deleteCache("news");
+
     res.status(201).json(news);
   } catch (error) {
     next(error);
@@ -65,6 +88,11 @@ const updateNews = async (req, res, next) => {
       last_updated_by: userId,
     });
 
+    if (!!is_active) {
+      await setCache(`news/${news.id}`, JSON.stringify(news));
+    }
+    await deleteCache("news");
+
     res.status(200).json({ message: "News updated" });
   } catch (error) {
     next(error);
@@ -80,12 +108,13 @@ const deleteNews = async (req, res, next) => {
       throw { name: "NOT_FOUND" };
     }
 
-    console.log(news);
-
     await news.update({
       deletedAt: new Date(),
       last_updated_by: userId,
     });
+
+    await deleteNews(`news/${news.id}`);
+    await deleteCache("news");
 
     res.status(200).json({ message: "News deleted" });
   } catch (error) {
